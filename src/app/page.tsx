@@ -13,7 +13,7 @@ export default function Home() {
         <div className="mt-8 text-center">
           <Button>
             <Link href="/login" className="text-lg">
-              Go to Login
+              Login to Admin
             </Link>
           </Button>
         </div>

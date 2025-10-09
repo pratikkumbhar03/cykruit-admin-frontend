@@ -3,7 +3,7 @@
 import React from "react";
 import { Eye, Check, X } from "lucide-react";
 import { KYCRecord } from "../../types/kyc";
-import { ConfirmDialog } from "@/components/kyc-management/Dialogs/ConfirmDialog";
+import { ConfirmDialog } from "@/components/Dialogs/ConfirmDialog";
 
 export const TableActions: React.FC<{
   recordId: string;

@@ -41,7 +41,7 @@ const KYCList: React.FC = () => {
 
 
   const handleView = (id: string) => {
-    window.location.href = `/kyc-management/${id}`;
+    window.open(`/kyc-management/${id}`);
   };
 
   const handleApprove = (id: string) => {

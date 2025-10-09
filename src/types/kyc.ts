@@ -10,6 +10,22 @@ export interface KYCRecord {
   submittedOn: string;
 }
 
+export interface DocumentItem {
+  id: string;
+  name: string;
+  type: 'pdf' | 'image';
+  url: string;
+  thumbnail: string;
+  pageCount?: number;
+}
+
+export interface KYCDetail extends KYCRecord {
+  website: string;
+  companyType: string;
+  location: string;
+  documents: DocumentItem[];
+}
+
 export type StatusFilter = 'all' | 'pending' | 'approved' | 'rejected';
 
 // ============================================
@@ -44,3 +60,106 @@ export const generateMockData = (): KYCRecord[] => {
   ];
 };
 
+// ============================================
+// Mock KYC Detail Data
+// ============================================
+export const generateMockKYCDetail = (id: string): KYCDetail | null => {
+  const record = generateMockData().find(r => r.id === id);
+  if (!record) return null;
+
+  const detailsMap: Record<string, Partial<KYCDetail>> = {
+    '1': {
+      website: 'https://techcorp.com',
+      companyType: 'Private Limited Company',
+      location: 'San Francisco, CA, United States',
+      documents: [
+        {
+          id: 'doc1',
+          name: 'Company Registration Certificate',
+          type: 'pdf',
+          url: '/public/registration.pdf',
+          thumbnail: '/documents/registration-thumb.jpg',
+          pageCount: 3
+        },
+        {
+          id: 'doc2',
+          name: 'Tax Identification Number',
+          type: 'pdf',
+          url: '/public/tin.pdf',
+          thumbnail: '/documents/tin-thumb.jpg',
+          pageCount: 1
+        },
+        {
+          id: 'doc3',
+          name: 'Business License',
+          type: 'image',
+          url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400',
+          thumbnail: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400'
+        },
+        {
+          id: 'doc4',
+          name: 'Address Proof',
+          type: 'image',
+          url: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=400',
+          thumbnail: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=400'
+        }
+      ]
+    },
+    '2': {
+      website: 'https://globalsolutions.com',
+      companyType: 'Public Limited Company',
+      location: 'New York, NY, United States',
+      documents: [
+        {
+          id: 'doc1',
+          name: 'Incorporation Certificate',
+          type: 'pdf',
+          url: '/documents/incorporation.pdf',
+          thumbnail: '/documents/incorporation-thumb.jpg',
+          pageCount: 2
+        },
+        {
+          id: 'doc2',
+          name: 'GST Certificate',
+          type: 'image',
+          url: 'https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=400',
+          thumbnail: 'https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=400'
+        }
+      ]
+    }
+  };
+
+  // Default data for other companies
+  const defaultDetail: Partial<KYCDetail> = {
+    website: `https://${record.companyName.toLowerCase().replace(/\s+/g, '')}.com`,
+    companyType: 'Private Limited Company',
+    location: 'Mumbai, Maharashtra, India',
+    documents: [
+      {
+        id: 'doc1',
+        name: 'Company Registration',
+        type: 'pdf',
+        url: '/documents/default-registration.pdf',
+        thumbnail: '/documents/default-thumb.jpg',
+        pageCount: 2
+      },
+      {
+        id: 'doc2',
+        name: 'Business License',
+        type: 'image',
+        url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400',
+        thumbnail: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400'
+      }
+    ]
+  };
+
+  const specificDetail = detailsMap[id] || defaultDetail;
+
+  return {
+    ...record,
+    website: specificDetail.website!,
+    companyType: specificDetail.companyType!,
+    location: specificDetail.location!,
+    documents: specificDetail.documents!
+  };
+};
