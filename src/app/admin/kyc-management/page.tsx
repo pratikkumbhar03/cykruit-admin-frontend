@@ -182,5 +182,3 @@ const KYCList: React.FC = () => (
 );
 
 export default KYCList;
-
-export default KYCList;
