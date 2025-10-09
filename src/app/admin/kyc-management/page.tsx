@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from "next/navigation";
 import { Breadcrumb } from "@/components/kyc-management/Breadcrumb";
 import { StatusBadge } from "@/components/kyc-management/StatusBadge";
@@ -12,7 +12,7 @@ import { ErrorState } from "@/components/kyc-management/states/ErrorState";
 import { TableSkeleton } from "@/components/kyc-management/states/TableSkeleton";
 
 
-const KYCList: React.FC = () => {
+const KYCListContent: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [currentPage, setCurrentPage] = useState(1);
@@ -174,5 +174,13 @@ const KYCList: React.FC = () => {
     </div>
   );
 };
+
+const KYCList: React.FC = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <KYCListContent />
+  </Suspense>
+);
+
+export default KYCList;
 
 export default KYCList;
