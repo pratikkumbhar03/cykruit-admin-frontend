@@ -18,7 +18,10 @@ export const LoginCard = () => {
       return
     }
     if(email === "admin@rivedix.com" && password === "123@cykruit"){
-      window.location.href = "/dashboard"
+      window.location.href = "/admin/dashboard"
+    }
+    else{
+      setError("Email or Password are wrong.")
     }
   }
 

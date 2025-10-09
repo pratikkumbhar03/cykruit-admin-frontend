@@ -1,14 +1,15 @@
 "use client";
-import React, { useState } from 'react';
-import { Breadcrumb } from '../../components/kyc-management/Breadcrumb';
-import { StatusBadge } from '../../components/kyc-management/StatusBadge';
-import { StatusFilter, generateMockData } from '../../types/kyc';
-import { Toolbar } from '../../components/kyc-management/Toolbar';
-import { TableActions } from '../../components/kyc-management/TableActions';
-import { Pagination } from '../../components/kyc-management/Pagination';
-import { EmptyState } from '../../components/kyc-management/states/EmptyState';
-import { ErrorState } from '../../components/kyc-management/states/ErrorState';
-import { TableSkeleton } from '../../components/kyc-management/states/TableSkeleton';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from "next/navigation";
+import { Breadcrumb } from "@/components/kyc-management/Breadcrumb";
+import { StatusBadge } from "@/components/kyc-management/StatusBadge";
+import { StatusFilter, generateMockData } from "@/types/kyc";
+import { Toolbar } from "@/components/kyc-management/Toolbar";
+import { TableActions } from "@/components/kyc-management/TableActions";
+import { Pagination } from "@/components/kyc-management/Pagination";
+import { EmptyState } from "@/components/kyc-management/states/EmptyState";
+import { ErrorState } from "@/components/kyc-management/states/ErrorState";
+import { TableSkeleton } from "@/components/kyc-management/states/TableSkeleton";
 
 
 const KYCList: React.FC = () => {
@@ -17,18 +18,25 @@ const KYCList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
-  
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const q = (searchParams?.get("status") as StatusFilter) ?? "all";
+    setStatusFilter(q);
+  }, [searchParams]);
+
   const pageSize = 6;
   const allRecords = generateMockData();
 
   // Filter records
   const filteredRecords = allRecords.filter(record => {
-    const matchesSearch = 
+    const matchesSearch =
       record.companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       record.contactEmail.toLowerCase().includes(searchQuery.toLowerCase());
-    
+
     const matchesStatus = statusFilter === 'all' || record.status === statusFilter;
-    
+
     return matchesSearch && matchesStatus;
   });
 
@@ -41,7 +49,7 @@ const KYCList: React.FC = () => {
 
 
   const handleView = (id: string) => {
-    window.open(`/kyc-management/${id}`);
+    window.location.href = `/admin/kyc-management/${id}`
   };
 
   const handleApprove = (id: string) => {
@@ -68,10 +76,10 @@ const KYCList: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="p-6">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb />
-        
+
         <h1 className="text-3xl font-bold text-gray-900 mb-6">KYC Management</h1>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">

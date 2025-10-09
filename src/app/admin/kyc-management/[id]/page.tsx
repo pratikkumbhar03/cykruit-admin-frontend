@@ -21,7 +21,7 @@ const KYCDetailPage: React.FC = () => {
 
   if (!kycData) {
     notFound();
-    return null;
+    return <div className="p-6">KYC record not found</div>;
   }
 
   const handleApprove = (id: string) => {
@@ -35,7 +35,7 @@ const KYCDetailPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="p-6">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb />
 
