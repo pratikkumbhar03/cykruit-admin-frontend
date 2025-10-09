@@ -17,9 +17,9 @@ export const LoginCard = () => {
       setError("Please fill in all fields.")
       return
     }
-
-    // TODO: Add login API call or authentication logic
-    console.log("Logging in with:", { email, password })
+    if(email === "admin@rivedix.com" && password === "123@cykruit"){
+      window.location.href = "/dashboard"
+    }
   }
 
   return (

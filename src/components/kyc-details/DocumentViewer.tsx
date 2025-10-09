@@ -1,19 +1,20 @@
-"use client"
-import { useState } from 'react';
-import { DocumentItem } from '@/types/kyc';
-import { FileText, Download, X, ChevronLeft, ChevronRight } from 'lucide-react';
+"use client";
 
+import dynamic from "next/dynamic";
+import { DocumentItem } from "@/types/kyc";
+import { FileText, Download, X } from "lucide-react";
+
+// ✅ Dynamically import the PDF preview (client-only)
+const PDFPreview = dynamic(() => import("./PDFPreview"), { ssr: false });
 
 export const DocumentViewer: React.FC<{
   document: DocumentItem | null;
   onClose: () => void;
 }> = ({ document, onClose }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-
   if (!document) return null;
 
   const handleDownload = () => {
-    const link = window.document.createElement('a');
+    const link = window.document.createElement("a");
     link.href = document.url;
     link.download = document.name;
     link.click();
@@ -21,16 +22,14 @@ export const DocumentViewer: React.FC<{
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col">
+      <div className="bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[95vh] flex flex-col">
+        {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center gap-3">
             <FileText className="w-5 h-5 text-gray-600" />
-            <div>
-              <h3 className="font-semibold text-gray-900">{document.name}</h3>
-              {document.type === 'pdf' && document.pageCount && (
-                <p className="text-sm text-gray-500">{document.pageCount} pages</p>
-              )}
-            </div>
+            <h3 className="font-semibold text-gray-900 truncate max-w-[400px]">
+              {document.name}
+            </h3>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -50,46 +49,19 @@ export const DocumentViewer: React.FC<{
           </div>
         </div>
 
-        <div className="flex-1 overflow-auto p-4 bg-gray-50">
-          <div className="bg-white rounded-lg shadow-sm p-4 flex items-center justify-center min-h-[500px]">
-            {document.type === 'pdf' ? (
-              <div className="text-center">
-                <FileText className="w-24 h-24 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-600 mb-2">PDF Document Preview</p>
-                <p className="text-sm text-gray-500">{document.name}</p>
-              </div>
-            ) : (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={document.url}
-                alt={document.name}
-                className="max-w-full max-h-full object-contain"
-              />
-            )}
-          </div>
+        {/* Document Preview */}
+        <div className="flex-1 overflow-auto p-4 bg-gray-50 flex items-center justify-center">
+          {document.type === "pdf" ? (
+            <PDFPreview fileUrl={document.url} />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={document.url}
+              alt={document.name}
+              className="max-w-full max-h-full object-contain rounded-md shadow-sm"
+            />
+          )}
         </div>
-
-        {document.type === 'pdf' && document.pageCount && document.pageCount > 1 && (
-          <div className="flex items-center justify-center gap-4 p-4 border-t border-gray-200">
-            <button
-              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-              className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <span className="text-sm text-gray-600">
-              Page {currentPage} of {document.pageCount}
-            </span>
-            <button
-              onClick={() => setCurrentPage(Math.min(document.pageCount!, currentPage + 1))}
-              disabled={currentPage === document.pageCount}
-              className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );

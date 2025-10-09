@@ -2,8 +2,6 @@
 import { DocumentItem } from "@/types/kyc";
 import { FileText } from 'lucide-react';
 
-
-
 export const DocumentsCard: React.FC<{
   documents: DocumentItem[];
   onDocumentClick: (doc: DocumentItem) => void;
@@ -24,14 +22,11 @@ export const DocumentsCard: React.FC<{
                 <div className="text-center p-4">
                   <FileText className="w-12 h-12 text-gray-400 mx-auto mb-2" />
                   <p className="text-xs text-gray-600 font-medium">{doc.name}</p>
-                  {doc.pageCount && (
-                    <p className="text-xs text-gray-500 mt-1">{doc.pageCount} pages</p>
-                  )}
                 </div>
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={doc.thumbnail}
+                  src={doc.url}
                   alt={doc.name}
                   className="w-full h-full object-cover"
                 />
